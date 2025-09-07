@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Mesa está Servida</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Merriweather', serif;
+            color: #d1d5db; /* gray-400 */
+            background-color: #1f2937; /* slate-800 */
+        }
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+        .presentation-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+            position: relative;
+            background-color: #1f2937; /* slate-800 */
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 90vw;
+            min-height: 90vh;
+            padding: 2rem;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .slide {
+            grid-column: 1;
+            grid-row: 1;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 100%;
+            overflow-y: auto;
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+            text-align: center;
+        }
+        .slide::-webkit-scrollbar {
+            display: none; /* Oculta la barra de desplazamiento */
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+        .nav-btn {
+            position: absolute;
+            bottom: 2rem;
+            z-index: 20;
+            background: linear-gradient(45deg, #d97706, #a16207); /* degradado */
+            color: #fff;
+            font-weight: bold;
+            border-radius: 9999px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+        }
+        .nav-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .prev-btn {
+            left: 2rem;
+        }
+        .next-btn {
+            right: 2rem;
+        }
+        .hidden {
+            display: none;
+        }
+        .ficha-expandible {
+            background-color: #2d3748; /* gray-800 */
+            color: #e2e8f0; /* slate-200 */
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out, background-color 0.3s;
+            padding: 1rem;
+            text-align: left;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+        .ficha-expandible:hover {
+            transform: scale(1.02);
+            background-color: #4a5568; /* gray-700 */
+        }
+        .ficha-content {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            color: #d1d5db; /* gray-400 */
+        }
+        .ficha-content.expanded {
+            max-height: 500px;
+            padding-top: 1rem;
+        }
+        .ficha-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            color: #f59e0b; /* amber-500 */
+        }
+        .ficha-header svg {
+            transition: transform 0.3s ease-in-out;
+            width: 24px;
+            height: 24px;
+        }
+        .ficha-expandible.active .ficha-header svg {
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body class="bg-stone-900 min-h-screen flex items-center justify-center p-4">
+
+    <div class="presentation-container">
+
+        <!-- Diapositiva 1: Portada -->
+        <div id="slide-1" class="slide active">
+            <img src="https://i.imgur.com/dDYOrEm.png" alt="Logotipo de la presentación" class="w-48 md:w-64 mb-6 mx-auto">
+            <h1 class="title-font text-5xl md:text-6xl font-extrabold text-amber-500 mb-4">La Mesa está Servida</h1>
+            <p class="text-2xl md:text-3xl text-gray-400 font-light italic">Tu lugar en el banquete de la fe</p>
+        </div>
+
+        <!-- Diapositiva 2: Roadmap -->
+        <div id="slide-2" class="slide">
+            <h2 class="title-font text-3xl md:text-4xl font-bold text-white mb-8">Nuestra Ruta: Del Reino a la Mesa</h2>
+            <div class="w-full flex flex-col items-center justify-center space-y-12 md:space-y-0 md:flex-row md:space-x-8 relative">
+                <div class="absolute w-1 bg-amber-600 h-full left-1/2 transform -translate-x-1/2 md:w-3/4 md:h-1 md:top-1/2 md:-translate-y-1/2 md:left-auto md:right-auto"></div>
+                <!-- Nodo 1 -->
+                <div class="flex flex-col items-center text-center relative z-10">
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-amber-600 rounded-full flex items-center justify-center text-white text-3xl md:text-4xl font-bold mb-4 shadow-lg">👑</div>
+                    <div class="bg-gray-800 rounded-xl p-6 shadow-md border border-amber-600 w-full md:w-64">
+                        <h3 class="title-font text-xl md:text-2xl font-bold text-amber-500 mb-2">El Mundo del Revés</h3>
+                        <p class="text-sm md:text-base text-gray-400">Exploramos “Venga a Nosotros Tu Reino”.</p>
+                    </div>
+                </div>
+                <!-- Nodo 2 -->
+                <div class="flex flex-col items-center text-center relative z-10">
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-amber-600 rounded-full flex items-center justify-center text-white text-3xl md:text-4xl font-bold mb-4 shadow-lg">🚪</div>
+                    <div class="bg-gray-800 rounded-xl p-6 shadow-md border border-amber-600 w-full md:w-64">
+                        <h3 class="title-font text-xl md:text-2xl font-bold text-amber-500 mb-2">Detrás de la Puerta</h3>
+                        <p class="text-sm md:text-base text-gray-400">Un recorrido por “Hágase tu Voluntad”.</p>
+                    </div>
+                </div>
+                <!-- Nodo 3 (Nuestro Inicio) -->
+                <div class="flex flex-col items-center text-center relative z-10">
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-amber-500 rounded-full flex items-center justify-center text-white text-3xl md:text-4xl font-bold mb-4 shadow-lg">🍽️</div>
+                    <div class="bg-amber-800 rounded-xl p-6 shadow-md border border-amber-600 w-full md:w-64 transform scale-105">
+                        <h3 class="title-font text-xl md:text-2xl font-bold text-white mb-2">La Mesa está Servida</h3>
+                        <p class="text-sm md:text-base text-white opacity-90">Aquí comienza nuestra experiencia.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diapositiva 3: Imagen de transición -->
+        <div id="slide-3" class="slide">
+            <img src="https://i.imgur.com/lxi4nhP.jpeg" alt="Grano y pan en una mesa rústica" class="rounded-xl shadow-lg w-full max-w-2xl h-auto">
+        </div>
+
+        <!-- Diapositiva 4: La Receta -->
+        <div id="slide-4" class="slide">
+            <h2 class="title-font text-3xl md:text-4xl font-bold text-white mb-6">La Receta</h2>
+            <div class="w-full max-w-2xl mx-auto flex flex-col justify-center items-center">
+                <p class="text-lg md:text-xl text-gray-400 mb-4 text-justify">
+                    Nuestras recetas normalmente comienzan con un plan, pero esta no. Esta receta viene directamente del Padre.
+                </p>
+                <p class="text-lg md:text-xl font-bold text-amber-500 mb-4 text-justify">
+                    El ingrediente principal es la confianza: pedir pan diario es reconocer que dependemos de Él.
+                </p>
+                <blockquote class="border-l-4 border-amber-600 pl-4 italic text-xl md:text-2xl font-light text-gray-400 mb-6 text-justify">
+                    "Yo soy el pan de vida. El que viene a mí nunca tendrá hambre; el que cree en mí no tendrá sed jamás."
+                    <span class="block text-right text-sm mt-2 font-normal">- Juan 6:35 NTV</span>
+                </blockquote>
+                <p class="text-lg md:text-xl font-semibold text-gray-400 italic flex items-start text-justify">
+                    <span class="text-3xl mr-2 flex-shrink-0">💡</span>Aplicación: Cuando seguimos la receta de Dios, descubrimos que no se trata de acumular, sino de recibir lo justo y necesario cada día, con gratitud.
+                </p>
+                <p class="text-lg md:text-xl font-bold text-amber-600 mt-6 text-justify">
+                    El secreto de Nuestra Receta:
+                    <span class="block font-light italic mt-2">“La receta de Dios para la vida no es complicada: confianza, obediencia y fe en que Él nunca falla.”</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Diapositiva 5: La Preparación -->
+        <div id="slide-5" class="slide">
+            <h2 class="title-font text-3xl md:text-4xl font-bold text-white mb-6">La Preparación <span class="font-light italic text-gray-400">(El proceso de Dios en nosotros)</span></h2>
+            <div class="w-full max-w-2xl mx-auto flex flex-col justify-center items-center">
+                <p class="text-lg md:text-xl text-gray-400 mb-8 text-justify">
+                    El maná caía cada día y no se podía guardar. La preparación requiere tiempo y fuego, igual que el pan necesita horno. El proceso nos enseña paciencia y dependencia.
+                </p>
+                <div class="w-full flex flex-col md:flex-row justify-center items-center md:space-x-8 space-y-4 md:space-y-0">
+                    <div class="flex-1 w-full">
+                        <div class="ficha-expandible">
+                            <div class="ficha-header">
+                                <h3 class="font-bold text-amber-500">Éxodo 16:4 NTV</h3>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-amber-500">
+                                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ficha-content">
+                                <p class="text-sm text-gray-400 text-justify p-4">"Entonces el Señor le dijo a Moisés: 'Haré que les llueva comida del cielo. Cada día, la gente podrá salir y recoger todo lo que necesite para ese día. Con esto los pondré a prueba para ver si siguen mis instrucciones.' "</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 w-full">
+                        <div class="ficha-expandible">
+                            <div class="ficha-header">
+                                <h3 class="font-bold text-amber-500">Éxodo 16:18 NTV</h3>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-amber-500">
+                                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ficha-content">
+                                <p class="text-sm text-gray-400 text-justify p-4">"Cuando midieron lo que habían recogido, los que habían recogido mucho no tenían nada de sobra, y los que habían recogido poco tenían suficiente. Cada uno había recogido lo que necesitaba."</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 w-full">
+                        <div class="ficha-expandible">
+                            <div class="ficha-header">
+                                <h3 class="font-bold text-amber-500">Lamentaciones 3:23 NTV</h3>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-amber-500">
+                                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ficha-content">
+                                <p class="text-sm text-gray-400 text-justify p-4">"Su fiel amor nunca se acaba; sus bondades son nuevas cada mañana."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-lg md:text-xl font-semibold text-gray-400 italic flex items-start justify-center text-justify mt-8">
+                    <span class="text-3xl mr-2 flex-shrink-0">💡</span>Aplicación: A veces pedimos pan, pero Dios primero nos mete en la cocina. Nos está preparando para recibirlo, para valorarlo y para compartirlo.
+                </p>
+                <p class="text-lg md:text-xl font-bold text-amber-600 mt-6 flex items-start justify-center text-center">
+                    <span class="text-3xl mr-2 flex-shrink-0">🧠</span>Reflexión:
+                    <span class="block font-light italic mt-2 text-gray-400">“El pan no se sirve crudo. Dios nos prepara en su horno de amor para que estemos listos para recibir su bendición.”</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Diapositiva 6: El Emplatado -->
+        <div id="slide-6" class="slide">
+            <h2 class="title-font text-3xl md:text-4xl font-bold text-white mb-6">El Emplatado <span class="font-light italic text-gray-400">(Cuando Dios dispone lo que ha preparado)</span></h2>
+            <div class="w-full max-w-2xl mx-auto flex flex-col justify-center items-center">
+                <p class="text-lg md:text-xl text-gray-400 mb-8 text-justify">
+                    El emplatado es cuando el pan preparado se presenta de forma hermosa y lista para comer. No solo es el pan físico, sino la Palabra y la gracia que Dios acomoda en nuestra vida con cuidado en los detalles.
+                </p>
+                <div class="w-full flex flex-col md:flex-row justify-center items-center md:space-x-8 space-y-4 md:space-y-0">
+                    <div class="flex-1 w-full">
+                        <div class="ficha-expandible">
+                            <div class="ficha-header">
+                                <h3 class="font-bold text-amber-500">Deuteronomio 8:2-3 NTV</h3>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-amber-500">
+                                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ficha-content">
+                                <p class="text-sm text-gray-400 text-justify p-4">"Recuerda cómo el Señor tu Dios te guió a través del desierto durante cuarenta años, humillándote y probándote para saber lo que había en tu corazón... Sí, te humilló al dejarte tener hambre y luego te alimentó con maná... para enseñarte que la gente no vive solo de pan, sino de toda palabra que sale de la boca del Señor."</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 w-full">
+                        <div class="ficha-expandible">
+                            <div class="ficha-header">
+                                <h3 class="font-bold text-amber-500">Mateo 4:3-4 NTV</h3>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-amber-500">
+                                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ficha-content">
+                                <p class="text-sm text-gray-400 text-justify p-4">"Entonces el diablo se le acercó para tentarlo. Le dijo: 'Si eres Hijo de Dios, convierte estas piedras en pan.' Jesús le dijo: 'No, las Escrituras dicen: “La gente no vive solo de pan, sino de toda palabra que sale de la boca de Dios”.' "</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-lg md:text-xl font-semibold text-gray-400 italic flex items-start justify-center text-justify mt-8">
+                    <span class="text-3xl mr-2 flex-shrink-0">💡</span>Aplicación: Dios no nos da de cualquier manera; Él prepara, acomoda y presenta su bendición en el momento justo y en la forma perfecta.
+                </p>
+                <p class="text-lg md:text-xl font-bold text-amber-600 mt-6 flex items-start justify-center text-center">
+                    <span class="text-3xl mr-2 flex-shrink-0">🧠</span>Reflexión:
+                    <span class="block font-light italic mt-2 text-gray-400">“Dios no solo prepara el pan, Él lo sirve de manera perfecta, a su tiempo y en su medida.”</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Diapositiva 7: La Mesa está Servida -->
+        <div id="slide-7" class="slide">
+            <h2 class="title-font text-3xl md:text-4xl font-bold text-white mb-6">La Mesa está Servida</h2>
+            <div class="w-full max-w-2xl mx-auto flex flex-col justify-center items-center">
+                <p class="text-lg md:text-xl text-gray-400 mb-8 text-justify">
+                    La mesa no es solo alimento, es comunión. Dios no nos da lo mínimo, sino que desborda su mesa con abundancia. En Jesús tenemos el Pan eterno que nos sacia para siempre.
+                </p>
+                <div class="w-full flex flex-col md:flex-row justify-center items-center md:space-x-8 space-y-4 md:space-y-0">
+                    <div class="flex-1 w-full">
+                        <div class="ficha-expandible">
+                            <div class="ficha-header">
+                                <h3 class="font-bold text-amber-500">Salmos 23:5 NTV</h3>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-amber-500">
+                                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ficha-content">
+                                <p class="text-sm text-gray-400 text-justify p-4">"Me preparas un banquete en frente de mis enemigos. Unges mi cabeza con aceite; mi copa se desborda de bendiciones."</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 w-full">
+                        <div class="ficha-expandible">
+                            <div class="ficha-header">
+                                <h3 class="font-bold text-amber-500">Juan 6:50-51 NTV</h3>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-amber-500">
+                                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ficha-content">
+                                <p class="text-sm text-gray-400 text-justify p-4">"El pan que da vida es el que desciende del cielo y da vida al mundo. Yo soy el pan de vida. El que cree en mí no tendrá hambre jamás, y el que bebe de mi sangre no tendrá sed jamás."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-lg md:text-xl font-semibold text-gray-400 italic flex items-start justify-center text-justify mt-8">
+                    <span class="text-3xl mr-2 flex-shrink-0">💡</span>Aplicación: La mesa de Dios no es solo física, es espiritual y desborda en gracia y vida.
+                </p>
+                <p class="text-lg md:text-xl font-bold text-amber-600 mt-6 flex items-start justify-center text-center">
+                    <span class="text-3xl mr-2 flex-shrink-0">🧠</span>Reflexión:
+                    <span class="block font-light italic mt-2 text-gray-400">“La mesa de Dios no es escasa, es abundante, llena de gracia y vida eterna.”</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Diapositiva 8: La bendición del pan y el vino (Actividad final) -->
+        <div id="slide-8" class="slide">
+            <h2 class="title-font text-3xl md:text-4xl font-bold text-white mb-6">La bendición del pan y el vino</h2>
+            <div class="w-full max-w-2xl mx-auto flex flex-col justify-center items-center">
+                <img src="https://i.imgur.com/SWp7zSB.png" alt="Pan y vino sobre una mesa iluminada" class="rounded-xl shadow-lg mb-6 max-h-80 w-auto">
+                <blockquote class="border-l-4 border-amber-600 pl-4 italic text-base md:text-lg font-light text-gray-400 text-justify">
+                    "Mientras comían, Jesús tomó un poco de pan y lo bendijo. Luego lo partió en trozos, lo dio a sus discípulos y dijo: “Tómenlo y cómanlo, porque esto es mi cuerpo”. Y tomó en sus manos una copa de vino y dio gracias a Dios por ella. Se la dio a ellos y dijo: “Cada uno de ustedes beba de la copa, porque esto es mi sangre, la cual confirma el pacto entre Dios y su pueblo. Es derramada como sacrificio para perdonar los pecados de muchos”."
+                    <span class="block text-right text-xs mt-2 font-normal">- Mateo 26:26-28 NTV</span>
+                </blockquote>
+            </div>
+        </div>
+
+        <!-- Diapositiva 9: Imagen de transición -->
+        <div id="slide-9" class="slide">
+            <img src="https://i.imgur.com/ytZOj5U.jpeg" alt="Copa de vino y pan en una mesa rústica" class="rounded-xl shadow-lg w-full max-w-2xl h-auto">
+        </div>
+
+        <!-- Diapositiva 10: Reflexión Final -->
+        <div id="slide-10" class="slide">
+            <h2 class="title-font text-3xl md:text-4xl font-bold text-white mb-8">Reflexión Final</h2>
+            <div class="w-full max-w-2xl mx-auto flex flex-col justify-center items-center">
+                <p class="text-xl md:text-2xl font-semibold text-amber-500 italic mt-8 mb-4 mx-auto text-center">
+                    “La mesa de Dios no termina aquí: nos invita cada día a alimentarnos de Cristo, nuestro Pan de vida y nuestra copa de salvación.”
+                </p>
+                <div id="final-call-to-action" class="mt-8">
+                    <p class="text-3xl md:text-4xl text-gray-400 font-bold mb-4 title-font">¡La mesa de Dios está servida!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diapositiva 11: Video final -->
+        <div id="slide-11" class="slide">
+            <h2 class="title-font text-3xl md:text-4xl font-bold text-white mb-8">Un Mensaje de Esperanza</h2>
+            <div class="relative w-full max-w-2xl mx-auto aspect-video rounded-xl overflow-hidden shadow-lg">
+                <iframe 
+                    class="absolute top-0 left-0 w-full h-full"
+                    src="https://www.youtube.com/embed/L-YAzVmy50k?controls=0" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <p class="text-sm md:text-base text-gray-400 mt-4">Video de John Piper: "La mesa de Dios está servida."</p>
+        </div>
+    </div>
+
+    <!-- Botones de navegación -->
+    <button id="prev-btn" class="nav-btn prev-btn hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 rotate-180">
+            <path fill-rule="evenodd" d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+        </svg>
+    </button>
+    <button id="next-btn" class="nav-btn next-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+            <path fill-rule="evenodd" d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+        </svg>
+    </button>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevButton = document.getElementById('prev-btn');
+            const nextButton = document.getElementById('next-btn');
+            const expandibleFichas = document.querySelectorAll('.ficha-expandible');
+            let currentSlideIndex = 0;
+
+            function updateButtons() {
+                prevButton.classList.toggle('hidden', currentSlideIndex === 0);
+                nextButton.classList.toggle('hidden', currentSlideIndex === slides.length - 1);
+            }
+
+            function showSlide(index) {
+                if (index < 0 || index >= slides.length) return;
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                slides[index].classList.add('active');
+                currentSlideIndex = index;
+                updateButtons();
+            }
+
+            nextButton.addEventListener('click', () => {
+                showSlide(currentSlideIndex + 1);
+            });
+
+            prevButton.addEventListener('click', () => {
+                showSlide(currentSlideIndex - 1);
+            });
+            
+            expandibleFichas.forEach(ficha => {
+                const content = ficha.querySelector('.ficha-content');
+                
+                ficha.addEventListener('click', () => {
+                    const isExpanded = ficha.classList.contains('active');
+                    
+                    expandibleFichas.forEach(otherFicha => {
+                        if (otherFicha !== ficha) {
+                            otherFicha.classList.remove('active');
+                            otherFicha.querySelector('.ficha-content').classList.remove('expanded');
+                        }
+                    });
+
+                    if (!isExpanded) {
+                        ficha.classList.add('active');
+                        content.classList.add('expanded');
+                    } else {
+                        ficha.classList.remove('active');
+                        content.classList.remove('expanded');
+                    }
+                });
+            });
+
+            showSlide(0);
+        });
+    </script>
+</body>
+</html>
